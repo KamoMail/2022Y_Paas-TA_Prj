@@ -12,5 +12,6 @@ import paasta.demo.dto.mongo.mongoSchema;
 @Repository
 public interface IMongoRepository extends MongoRepository<mongoSchema, String>{
 
-	List<mongoSchema> findByName(String name);
+	List<mongoSchema> findByName(String name); // => SQL로 치면 select
+	
 }

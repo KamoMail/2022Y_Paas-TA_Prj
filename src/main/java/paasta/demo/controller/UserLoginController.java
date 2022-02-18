@@ -19,6 +19,7 @@ import paasta.demo.controller.comm.CommController;
 import paasta.demo.dto.UserDTO;
 import paasta.demo.service.IUserInfoService;
 import paasta.demo.util.CmmUtil;
+import paasta.demo.util.kakaoService.IKakaoFriendListReq;
 import paasta.demo.util.kakaoService.IKakaoLogin;
 
 @Controller
@@ -29,6 +30,9 @@ public class UserLoginController extends CommController{
 	
 	@Resource(name = "KakaoLoginService")
 	private IKakaoLogin kakao;
+	
+	@Resource(name = "KakaoFriendListReq")
+	private IKakaoFriendListReq kakaoFriend;
 	
 	//=> 로그인 페이지 리턴
 	@GetMapping(value = "/loginPage")
@@ -97,6 +101,14 @@ public class UserLoginController extends CommController{
 		log.info(this.getClass().getName() + "kakaoAuthCodeProc End");
 		return "/redirect";
 	}
-
+	//=> 카카오 친구목록 불러오기 Test
+	@GetMapping(value = "/kakaoFriendList")
+	public String kakaoFriendListRequest(HttpServletRequest request, HttpSession session) throws Exception{
+		log.info(this.getClass().getName() + "kakao Request Friend List Start");
+		String accessToken = session.getAttribute("kakaoToken").toString();
+		log.info(kakaoFriend.requestFriendList(accessToken, 5));
+		log.info(this.getClass().getName() + "kakao Request Friend List End");
+		return "";
+	}
 
 }
