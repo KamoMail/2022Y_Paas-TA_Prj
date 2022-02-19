@@ -31,29 +31,33 @@ public class KakaoFriendListReq extends KakaoServiceLog implements IKakaoFriendL
 		log.info(this.getClass().getName() + "...request Kakao Freind List Start");
 		
 		String returnMessageLog = "친구목록 불러오기 성공";
+		String inPutAccessToken = accessToken; 
 		URL url = null; 
 		HttpURLConnection conn = null;
 
 		try {
-			url = new URL(RquestFreindListURL); // 카카오서버 접속 URL을 객체에 담기
+			url = new URL(RquestFreindListURL); // 카카오서버 접속 URL 카카오 서버 주소
 			conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("GET");
 			//--------------------------------------요청에 필요한 Header에 포함될 내용 헤더에 포함----------------------------
-			log.info("...accessTokem : " + accessToken);
-			conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+			log.info("...accessTokem : " + inPutAccessToken); 
+			conn.setRequestProperty("Authorization", "Bearer " + inPutAccessToken);
 			conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 			//---------------------------------------------------데이터를 보내는 작업부분------------------------------------
 			conn.setDoOutput(true);
-			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream())); // json 버퍼스트림으로 넣기
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream())); 
 			StringBuilder sb = new StringBuilder();			
-			sb.append("limit=" + friendNum); // => 즐겨찾기에 추가된 친구를 불러온다.
-			bw.write(sb.toString()); // 형변환하여 쓰기
+			sb.append("&limit=" + friendNum); // => 즐겨찾기에 추가된 친구를 불러온다.
+			bw.write(sb.toString());
 			bw.flush(); // 결과물 버퍼에서 보내기
 			bw.close(); // 리소스 닫기
 			//--------------------------------------------응답코드 받는 곳-----------------------------------------------------
 			int responseCode = conn.getResponseCode();
-			log.info("...responseCode : " + responseCode); // => 200이면 성공
-			//------------------------------------------------------------------------------------------------------------------
+			log.info("...responseCode : " + responseCode); // => 2xx면 성공, 4xx면 실패
+			if(responseCode == 403) {
+				returnMessageLog = "친구목록 불러오기 실패....";
+			}
+			//------------------------------------------------------------------------------------------------------------
 		} catch(IOException e) {
 			returnMessageLog = "친구목록 불러오기 실패....";
 			log.info("Error : " + e.toString());
