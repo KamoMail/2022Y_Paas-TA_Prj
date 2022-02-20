@@ -3,6 +3,7 @@ package paasta.demo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +27,10 @@ class PaasTaApplicationTests {
 		// given
 		redisSchema rs = new redisSchema();
 		// when 
-		rs.setName("choi");
-		rs.setTestData("testData");
+		rs.setName("kim");
+		rs.setTestData("testData2");
 		redis.save(rs);
-		String res = redis.findAllById("test2");
+		Optional<redisSchema> res = redis.findById("test2");
     	// then
 		//assertThat(rs, "친구목록 불러오기 성공");
     }
