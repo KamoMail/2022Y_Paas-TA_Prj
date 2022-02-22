@@ -28,6 +28,16 @@
             </exclusions>
         </dependency>
 <!-- =============================필요한 라이브러리의 의존성을 주입 해주는 시작점 ======================================= -->
+
+<!-- 인증 관련 의존성 -->
+<!-- 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-client</artifactId>
+		</dependency> -->
 <!-- 자바 메일 발송 라이브러리 -->
 		<dependency>
     		<groupId>javax.mail</groupId>

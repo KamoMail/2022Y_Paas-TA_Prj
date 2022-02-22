@@ -105,10 +105,9 @@ public class UserLoginController extends CommController{
 	@GetMapping(value = "/kakaoFriendList")
 	public String kakaoFriendListRequest(HttpServletRequest request, HttpSession session) throws Exception{
 		log.info(this.getClass().getName() + "kakao Request Friend List Start");
-		// String accessToken = session.getAttribute("kakaoToken").toString();
 		
-		String accessTokenTest = "eP6OUsYVS18Vcww7DedBYBa5ySWMGNhz9J5TrQo9cusAAAF_D1X6Vg";
-		log.info(kakaoFriend.requestFriendList(accessTokenTest, 5));
+		String accessToken = session.getAttribute("kakaoToken").toString();
+		log.info(kakaoFriend.requestFriendList(accessToken, 5));
 		
 		log.info(this.getClass().getName() + "kakao Request Friend List End");
 		return "";

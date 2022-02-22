@@ -1,10 +1,13 @@
 package paasta.demo.util.kakaoService.impl;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
 import java.net.URL;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import org.springframework.stereotype.Service;
 
@@ -27,34 +30,51 @@ public class KakaoFriendListReq extends KakaoServiceLog implements IKakaoFriendL
 
 	// => 엑세스 토큰으로 사용자의 친구 목록을 가져오는 메서드
 	@Override
-	public String requestFriendList(String accessToken, int friendNum) throws IOException{
+	public String requestFriendList(String accessToken, int friendNum) throws Exception{
 		log.info(this.getClass().getName() + "...request Kakao Freind List Start");
 		
 		String returnMessageLog = "친구목록 불러오기 성공";
-		String inPutAccessToken = accessToken; 
+		String requestURL = RquestFreindListURL;
+		String inPutAccessToken = "Bearer " + accessToken; 
+		String strFreindNum = String.valueOf(friendNum);
+		
 		URL url = null; 
-		HttpURLConnection conn = null;
+		HttpsURLConnection conn;
 
 		try {
-			url = new URL(RquestFreindListURL); // 카카오서버 접속 URL 카카오 서버 주소
-			conn = (HttpURLConnection) url.openConnection();
+			url = new URL(requestURL); // 카카오서버 접속 URL 카카오 서버 주소
+			conn = (HttpsURLConnection) url.openConnection();
 			conn.setRequestMethod("GET");
 			//--------------------------------------요청에 필요한 Header에 포함될 내용 헤더에 포함----------------------------
-			log.info("...accessTokem : " + inPutAccessToken); 
-			conn.setRequestProperty("Authorization", "Bearer " + inPutAccessToken);
-			conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-			//---------------------------------------------------데이터를 보내는 작업부분------------------------------------
+			conn.setRequestProperty("Authorization", inPutAccessToken);
+			conn.setRequestProperty("Content-Type", "application/json");
+			conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36");
+			// 가끔 유저 에이전트 정보가 자바로 찍혀서 403이 될 수 있으니 반드시 헤더에 추가해줄 것
 			conn.setDoOutput(true);
-			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream())); 
-			StringBuilder sb = new StringBuilder();			
-			sb.append("&limit=" + friendNum); // => 즐겨찾기에 추가된 친구를 불러온다.
-			bw.write(sb.toString());
-			bw.flush(); // 결과물 버퍼에서 보내기
-			bw.close(); // 리소스 닫기
+			//conn.connect(); // => 버퍼를 사용해도 해결하도록 할 것....
+			//---------------------------------------------------데이터를 보내고 작업부분------------------------------------
+			//BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream())); 
+			//StringBuilder sb = new StringBuilder();	// 파라미터 추가를 위한 문자열 빌더(속도 Up)		
+			//sb.append("&limit="); // => 즐겨찾기에 추가된 친구를 불러온다. key
+			//sb.append(strFreindNum); // => 즐겨찾기에 추가된 친구를 불러온다. value
+			//bw.write(sb.toString());
+			//bw.flush(); // 결과물 버퍼에서 보내기
+			
+			log.info("...Request Ok ...... Response Work Start");
+			//---------------------------------------------------데이터를 받는 작업부분---------------------------------------
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			String br_line = "";
+			String result = "";
+
+			while ((br_line = br.readLine()) != null) { // 데이터가 null 이 아닐때 까지 계속해서 데이터를 불러오고
+				result += br_line;
+			}
+			log.info("....result : " + result);
+            
 			//--------------------------------------------응답코드 받는 곳-----------------------------------------------------
 			int responseCode = conn.getResponseCode();
 			log.info("...responseCode : " + responseCode); // => 2xx면 성공, 4xx면 실패
-			if(responseCode == 403) {
+			if(responseCode == 403 || responseCode == 404) {
 				returnMessageLog = "친구목록 불러오기 실패....";
 			}
 			//------------------------------------------------------------------------------------------------------------
