@@ -50,7 +50,7 @@ class PaasTaApplicationTests {
 		System.out.println("res : " + res);
 		assertEquals(res, "친구목록 불러오기 성공");
     }
-	
+	// 버퍼 사용하면 안되는 이유 찾기
 	@Test
     void 왜안될까() throws Exception{
 		// given
