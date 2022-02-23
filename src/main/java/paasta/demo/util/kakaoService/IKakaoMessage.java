@@ -6,5 +6,7 @@ package paasta.demo.util.kakaoService;
  * */
 public interface IKakaoMessage {
 	
+	public String sendFriendKakaoTalk(); // => 친구에게 메시지 보내기
+	
 	public String sendMyKakaoTalk(String accessToken, String message, String moveUrl); // 카카오 메시지 나에게 보내기
 }

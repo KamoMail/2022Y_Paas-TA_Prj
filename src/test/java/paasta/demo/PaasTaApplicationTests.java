@@ -1,5 +1,6 @@
 package paasta.demo;
 
+import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
@@ -8,6 +9,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import com.google.gson.JsonArray;
 
 import paasta.demo.dto.MailDTO;
 import paasta.demo.dto.redis.redisSchema;
@@ -36,7 +39,6 @@ class PaasTaApplicationTests {
 		// then
 		assertEquals(res, 1);
 	}
-	
 	//@Test
     void 레디스테스트() throws IOException{ 
 		// given
@@ -55,11 +57,13 @@ class PaasTaApplicationTests {
     void 왜안될까() throws Exception{
 		// given
 		IKakaoFriendListReq kf = new KakaoFriendListReq();
-		String accessTokenTest = "{testToekn}";
+		String accessTokenTest = "dHhF7lsF0g";
 		// when 
-		String res = kf.requestFriendList(accessTokenTest, 5);
+		JsonArray res = kf.requestFriendList(accessTokenTest, 5);
+		String resStr = res.toString();
     	// then
-		assertEquals(res, "친구목록 불러오기 성공");
+		System.out.println("res : " + resStr);
+		//assertEquals(resStr, startsWith("[{"));
     }
 
 }

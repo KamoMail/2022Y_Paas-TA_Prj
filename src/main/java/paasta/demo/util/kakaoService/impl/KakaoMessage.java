@@ -79,6 +79,12 @@ public class KakaoMessage extends KakaoServiceLog implements IKakaoMessage, IKak
 		}
 		return returnMessageLog;
 	}
+
+	@Override
+	public String sendFriendKakaoTalk() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 
 }
