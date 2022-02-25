@@ -1,4 +1,4 @@
-package paasta.demo.util.kakaoService.impl;
+package paasta.demo.service.impl;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -16,9 +16,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import paasta.demo.util.kakaoService.IKakaoLogin;
-import paasta.demo.util.kakaoService.comm.IKakaoInfo;
-import paasta.demo.util.kakaoService.comm.KakaoServiceLog;
+import paasta.demo.service.IKakaoLoginService;
+import paasta.demo.service.comm.IKakaoInfoService;
+import paasta.demo.service.comm.KakaoServiceLog;
 
 /* @Auth 최별규
  * @Version 1.0
@@ -30,7 +30,7 @@ import paasta.demo.util.kakaoService.comm.KakaoServiceLog;
  * 카카오 로그인 순서 :  OAUTH2(인증코드 -> 접근 토큰 -> 사용자 정보 가져오기 -> 로그인)
  * */
 @Service("KakaoLoginService")
-public class KakaoLogin extends KakaoServiceLog implements IKakaoInfo, IKakaoLogin{
+public class KakaoLoginService extends KakaoServiceLog implements IKakaoInfoService, IKakaoLoginService{
 	// => 카카오 서버로부터 인증코드를 발급받는 메서드
 	@Override
 	public String getAuthCode() {

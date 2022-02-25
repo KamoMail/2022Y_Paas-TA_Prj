@@ -1,4 +1,4 @@
-package paasta.demo.util.kakaoService.comm;
+package paasta.demo.service.comm;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

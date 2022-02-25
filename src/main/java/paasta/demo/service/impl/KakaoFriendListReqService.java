@@ -1,4 +1,4 @@
-package paasta.demo.util.kakaoService.impl;
+package paasta.demo.service.impl;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,15 +7,19 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import paasta.demo.util.kakaoService.IKakaoFriendListReq;
-import paasta.demo.util.kakaoService.comm.IKakaoInfo;
-import paasta.demo.util.kakaoService.comm.KakaoServiceLog;
+import paasta.demo.dto.mongo.friendListDTO;
+import paasta.demo.persistance.mapper.KakaoMessageMapper;
+import paasta.demo.service.IKakaoFriendListReqService;
+import paasta.demo.service.comm.IKakaoInfoService;
+import paasta.demo.service.comm.KakaoServiceLog;
 
 /**
  * @author 최별규
@@ -28,8 +32,11 @@ import paasta.demo.util.kakaoService.comm.KakaoServiceLog;
  * tip : 10분간의 응답 캐시가 있기 떄문에 실시간 친구목록 변경이 되질 않는다.
  */
 @Service("KakaoFriendListReq")
-public class KakaoFriendListReq extends KakaoServiceLog implements IKakaoFriendListReq, IKakaoInfo{
+public class KakaoFriendListReqService extends KakaoServiceLog implements IKakaoFriendListReqService, IKakaoInfoService{
 
+	@Autowired
+	private KakaoMessageMapper kakaoFriendList;
+	
 	// => 엑세스 토큰으로 사용자의 친구 목록을 가져오는 메서드
 	@SuppressWarnings({ "null", "deprecation" })
 	@Override
@@ -94,11 +101,28 @@ public class KakaoFriendListReq extends KakaoServiceLog implements IKakaoFriendL
 		log.info(this.getClass().getName() + "...request Kakao Freind List End");
 		return jsonArray;
 	}
-	// => 친구 목록 불러온 다음 저장을 수행하는 메서드
+	// => 친구 목록 불러온 다음 저장을 수행하는 메서드(몽고 디비와 mySQL에 저장함)
 	@Override
 	public int insertFriendList(JsonArray paramObject) throws Exception {
 		log.info(this.getClass().getName() + "...Kakao Freind Insert To DataBase Start");
-		int res = 0;
+		int res = 0; // 성공하면 1로 변하도록 함
+		
+		friendListDTO tempDTO = new friendListDTO(); // => DTO 형식으로 임시 저장할 변수
+		friendListDTO rDTO = new friendListDTO(); // => 데이터 중복을 위한 변수
+		//------------------------------------UUID 중복확인한 후 데이터베이스에 친구 목록 저장하는 로직-------------------------------------
+		for(int i = 0; i < paramObject.size(); i++) {
+			JsonElement element = paramObject.get(i);
+			tempDTO.setUuid(element.getAsJsonObject().get("uuid").getAsString());
+			rDTO = kakaoFriendList.getUuidExists(tempDTO);
+			
+			if(rDTO.getExists_yn().equals("N")) {// => 만약 중복이 아니면 N을 반환하기 때문에 if 스코프 안에 로직이 동작함
+				rDTO = null;
+				tempDTO.setKid(element.getAsJsonObject().get("id").getAsString());
+				tempDTO.setName(element.getAsJsonObject().get("profile_nickname").getAsString());
+				
+				element = null;
+			}
+		}
 		
 		
 		log.info(this.getClass().getName() + "...Kakao Freind Insert To DataBase End");

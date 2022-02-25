@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.IOException;
 import java.util.Optional;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -14,10 +13,10 @@ import com.google.gson.JsonArray;
 import paasta.demo.dto.MailDTO;
 import paasta.demo.dto.redis.redisSchema;
 import paasta.demo.persistance.mapper.redis.IRedisRepository;
+import paasta.demo.service.IKakaoFriendListReqService;
 import paasta.demo.service.IMailService;
+import paasta.demo.service.impl.KakaoFriendListReqService;
 import paasta.demo.service.impl.MailService;
-import paasta.demo.util.kakaoService.IKakaoFriendListReq;
-import paasta.demo.util.kakaoService.impl.KakaoFriendListReq;
 
 @SpringBootTest
 class PaasTaApplicationTests {
@@ -52,10 +51,10 @@ class PaasTaApplicationTests {
 		assertEquals(res, "친구목록 불러오기 성공");
     }
 	// 버퍼 사용하면 안되는 이유 찾기
-	@Test
+	//@Test
     void 왜안될까() throws Exception{
 		// given
-		IKakaoFriendListReq kf = new KakaoFriendListReq();
+		IKakaoFriendListReqService kf = new KakaoFriendListReqService();
 		String accessTokenTest = "dHhF7lsF0g";
 		// when 
 		JsonArray res = kf.requestFriendList(accessTokenTest, 5);

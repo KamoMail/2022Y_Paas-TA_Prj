@@ -10,7 +10,7 @@ target/
 
 ### 민감정보 삭제(by CHOI) ###
 src/main/resources/application.properties
-src/main/java/paasta/demo/util/kakaoService/comm/IKakaoInfo.java
+src/main/java/paasta/demo/service/comm/IKakaoInfoService.java
 
 ### STS ###
 .apt_generated

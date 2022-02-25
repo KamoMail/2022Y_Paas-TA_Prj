@@ -1,8 +1,8 @@
-package paasta.demo.util.kakaoService;
+package paasta.demo.service;
 
 import com.google.gson.JsonArray;
 
-public interface IKakaoFriendListReq {
+public interface IKakaoFriendListReqService {
 	
 	public int insertFriendList(JsonArray paramObject) throws Exception; // => 친구 목록 불러온 다음 저장하는 로직
 	

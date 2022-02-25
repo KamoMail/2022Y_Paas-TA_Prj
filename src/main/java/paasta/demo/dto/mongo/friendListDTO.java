@@ -21,4 +21,6 @@ public class friendListDTO {
 	
 	private String uuid; //=> 사용자 고유 ID, 나중에 메시지 발송시 활용
 	
+	private String exists_yn; //=> uuid 중복확인 을 위한 변수 Y, N으로 리턴 된다.
+	
 }

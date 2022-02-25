@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="paasta.demo.persistance.mapper.KakaoMessageMapper">
+<!-- 친구 목록 넣는 쿼리 -->
+	<select id="getUserInfo" resultType="UserDTO">
+	SELECT 
+		USER_EMAIL,
+		USER_ID,
+		USER_NAME,
+		USER_ADDR
+	FROM 
+		USER_INFO 
+	WHERE 
+		USER_ID=#{user_id} and PASSWORD=#{password};
+	</select>
+<!-- Pk인 UUID로 중복 등록 여부 확인하는 쿼리-->
+	<select id="getUuidExists" parameterType="friendListDTO" resultType="friendListDTO">
+		SELECT 
+			IF(COUNT(1), 'Y','N') AS EXISTS_YN 
+		FROM 
+			FRIEND_LIST
+		WHERE
+			FRIEND_UUID=#{uuid}
+	</select>		
+</mapper>

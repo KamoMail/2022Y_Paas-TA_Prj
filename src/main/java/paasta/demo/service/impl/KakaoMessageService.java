@@ -1,4 +1,4 @@
-package paasta.demo.util.kakaoService.impl;
+package paasta.demo.service.impl;
 
 
 import java.io.BufferedWriter;
@@ -10,9 +10,9 @@ import java.util.HashMap;
 
 import org.json.JSONObject;
 
-import paasta.demo.util.kakaoService.IKakaoMessage;
-import paasta.demo.util.kakaoService.comm.IKakaoInfo;
-import paasta.demo.util.kakaoService.comm.KakaoServiceLog;
+import paasta.demo.service.IKakaoMessageService;
+import paasta.demo.service.comm.IKakaoInfoService;
+import paasta.demo.service.comm.KakaoServiceLog;
 /* @Auth 최별규
  * @Version 1.0
  * 카카오 엑세스 토큰을 통해 메시지를 보내는 클래스입니다.
@@ -22,7 +22,7 @@ import paasta.demo.util.kakaoService.comm.KakaoServiceLog;
  * | 2022.02.12 |  최별규     |  초안 작성
  * 메시지는 엑세스 토큰이 있어야만 발송이 가능합니다.
  * */
-public class KakaoMessage extends KakaoServiceLog implements IKakaoMessage, IKakaoInfo{
+public class KakaoMessageService extends KakaoServiceLog implements IKakaoMessageService, IKakaoInfoService{
 	// => 카카오 로그인 성공 후 나에게 톡을 보내는 기능
 	@Override
 	public String sendMyKakaoTalk(String accessToken, String message, String moveUrl) {

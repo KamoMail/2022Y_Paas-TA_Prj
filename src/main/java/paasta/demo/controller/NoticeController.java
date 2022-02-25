@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import paasta.demo.controller.comm.AbstractController;
 import paasta.demo.dto.NoticeDTO;
+import paasta.demo.service.IKakaoLoginService;
 import paasta.demo.service.INoticeService;
 import paasta.demo.util.CmmUtil;
-import paasta.demo.util.kakaoService.IKakaoLogin;
 
 /*
  * Controller 선언해야만 Spring 프레임워크에서 Controller인지 인식 가능
@@ -35,7 +35,7 @@ public class NoticeController extends AbstractController {
 	@Resource(name = "NoticeService")
 	private INoticeService noticeService;
 	@Resource(name = "KakaoLoginService")
-	private IKakaoLogin kakao;
+	private IKakaoLoginService kakao;
 	
 
 	/*

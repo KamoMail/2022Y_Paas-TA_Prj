@@ -12,7 +12,14 @@ public class UserDTO {
     private String user_name; // 이름
     private String user_addr; //주소
     private String access_token; // 카카오 로그인 및 톡 발송용 토큰
+    private String exists_yn; // 회원 가입 중복 확인을 위한 변수
     
+	public String getExists_yn() {
+		return exists_yn;
+	}
+	public void setExists_yn(String exists_yn) {
+		this.exists_yn = exists_yn;
+	}
 	public String getAccess_token() {
 		return access_token;
 	}

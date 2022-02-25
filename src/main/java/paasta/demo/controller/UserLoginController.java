@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import paasta.demo.controller.comm.CommController;
 import paasta.demo.dto.UserDTO;
+import paasta.demo.service.IKakaoFriendListReqService;
+import paasta.demo.service.IKakaoLoginService;
 import paasta.demo.service.IUserInfoService;
 import paasta.demo.util.CmmUtil;
-import paasta.demo.util.kakaoService.IKakaoFriendListReq;
-import paasta.demo.util.kakaoService.IKakaoLogin;
 
 @Controller
 public class UserLoginController extends CommController{
@@ -29,10 +29,10 @@ public class UserLoginController extends CommController{
 	private IUserInfoService userService;
 	
 	@Resource(name = "KakaoLoginService")
-	private IKakaoLogin kakao;
+	private IKakaoLoginService kakao;
 	
 	@Resource(name = "KakaoFriendListReq")
-	private IKakaoFriendListReq kakaoFriend;
+	private IKakaoFriendListReqService kakaoFriend;
 	
 	//=> 로그인 페이지 리턴
 	@GetMapping(value = "/loginPage")
