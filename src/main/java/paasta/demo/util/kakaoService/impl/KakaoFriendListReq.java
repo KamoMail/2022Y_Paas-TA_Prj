@@ -67,7 +67,7 @@ public class KakaoFriendListReq extends KakaoServiceLog implements IKakaoFriendL
 			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			String br_line = "";
 			String result = "";
-
+			
 			while ((br_line = br.readLine()) != null) { // 데이터가 null 이 아닐때 까지 계속해서 데이터를 불러오고
 				result += br_line;
 			}

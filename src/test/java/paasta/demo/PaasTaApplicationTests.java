@@ -1,6 +1,5 @@
 package paasta.demo;
 
-import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
