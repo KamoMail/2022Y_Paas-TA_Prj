@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.IOException;
 import java.util.Optional;
 
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -51,17 +52,22 @@ class PaasTaApplicationTests {
 		assertEquals(res, "친구목록 불러오기 성공");
     }
 	// 버퍼 사용하면 안되는 이유 찾기
-	//@Test
+	@Test
     void 왜안될까() throws Exception{
 		// given
 		IKakaoFriendListReqService kf = new KakaoFriendListReqService();
-		String accessTokenTest = "dHhF7lsF0g";
+		IKakaoFriendListReqService insert = new KakaoFriendListReqService();
+		String accessTokenTest = "jTkkKw4ukQ";
 		// when 
 		JsonArray res = kf.requestFriendList(accessTokenTest, 5);
-		String resStr = res.toString();
+		int result = insert.insertFriendList(res);
     	// then
-		System.out.println("res : " + resStr);
-		//assertEquals(resStr, startsWith("[{"));
+		assertEquals(result, 1);
     }
+	
+	//@Test
+	void 매퍼테스트() throws Exception{
+		
+	}
 
 }

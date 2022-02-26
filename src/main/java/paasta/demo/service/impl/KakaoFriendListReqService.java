@@ -106,25 +106,32 @@ public class KakaoFriendListReqService extends KakaoServiceLog implements IKakao
 	public int insertFriendList(JsonArray paramObject) throws Exception {
 		log.info(this.getClass().getName() + "...Kakao Freind Insert To DataBase Start");
 		int res = 0; // 성공하면 1로 변하도록 함
+
+		log.info("...array Size : " + paramObject.size());
 		
-		friendListDTO tempDTO = new friendListDTO(); // => DTO 형식으로 임시 저장할 변수
-		friendListDTO rDTO = new friendListDTO(); // => 데이터 중복을 위한 변수
+		friendListDTO tempDTO; // => DTO 형식으로 임시 저장할 변수
+		friendListDTO rDTO; // => 데이터 중복을 위한 변수
 		//------------------------------------UUID 중복확인한 후 데이터베이스에 친구 목록 저장하는 로직-------------------------------------
 		for(int i = 0; i < paramObject.size(); i++) {
+			tempDTO = new friendListDTO();
+			rDTO  = new friendListDTO();
+			
 			JsonElement element = paramObject.get(i);
 			tempDTO.setUuid(element.getAsJsonObject().get("uuid").getAsString());
-			rDTO = kakaoFriendList.getUuidExists(tempDTO);
-			
+			// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ERROR >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+			rDTO = kakaoFriendList.getUuidExists(tempDTO); // => 널 발생
+			//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ERROR <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+			log.info("Y? N? " + rDTO.getExists_yn().toString());
 			if(rDTO.getExists_yn().equals("N")) {// => 만약 중복이 아니면 N을 반환하기 때문에 if 스코프 안에 로직이 동작함
-				rDTO = null;
 				tempDTO.setKid(element.getAsJsonObject().get("id").getAsString());
 				tempDTO.setName(element.getAsJsonObject().get("profile_nickname").getAsString());
-				
+				res = kakaoFriendList.insertFriendList(tempDTO);
+				tempDTO = null;
+				rDTO = null;
 				element = null;
 			}
 		}
-		
-		
+		//-------------------------------------------------------------------------------------------------------------------
 		log.info(this.getClass().getName() + "...Kakao Freind Insert To DataBase End");
 		return res;
 	}
