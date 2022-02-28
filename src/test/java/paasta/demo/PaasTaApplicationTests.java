@@ -25,6 +25,9 @@ class PaasTaApplicationTests {
 	@Autowired
 	private IRedisRepository redis;
 	
+	@Autowired
+	private IKakaoFriendListReqService kakaoFriendListReq;
+	
 	//@Test
 	void 메일테스트() throws Exception{
 		// given
@@ -55,12 +58,10 @@ class PaasTaApplicationTests {
 	@Test
     void 왜안될까() throws Exception{
 		// given
-		IKakaoFriendListReqService kf = new KakaoFriendListReqService();
-		IKakaoFriendListReqService insert = new KakaoFriendListReqService();
-		String accessTokenTest = "jTkkKw4ukQ";
+		String accessTokenTest = "E";
 		// when 
-		JsonArray res = kf.requestFriendList(accessTokenTest, 5);
-		int result = insert.insertFriendList(res);
+		JsonArray res = kakaoFriendListReq.requestFriendList(accessTokenTest, 5);
+		int result = kakaoFriendListReq.insertFriendList(res);
     	// then
 		assertEquals(result, 1);
     }

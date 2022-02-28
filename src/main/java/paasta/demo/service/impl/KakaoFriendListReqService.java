@@ -16,6 +16,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import paasta.demo.dto.mongo.friendListDTO;
+import paasta.demo.dto.mongo.testDTO;
 import paasta.demo.persistance.mapper.KakaoMessageMapper;
 import paasta.demo.service.IKakaoFriendListReqService;
 import paasta.demo.service.comm.IKakaoInfoService;
@@ -35,7 +36,7 @@ import paasta.demo.service.comm.KakaoServiceLog;
 public class KakaoFriendListReqService extends KakaoServiceLog implements IKakaoFriendListReqService, IKakaoInfoService{
 
 	@Autowired
-	private KakaoMessageMapper kakaoFriendList;
+	private KakaoMessageMapper kakaoFriendMapper;
 	
 	// => 엑세스 토큰으로 사용자의 친구 목록을 가져오는 메서드
 	@SuppressWarnings({ "null", "deprecation" })
@@ -107,7 +108,7 @@ public class KakaoFriendListReqService extends KakaoServiceLog implements IKakao
 		log.info(this.getClass().getName() + "...Kakao Freind Insert To DataBase Start");
 		int res = 0; // 성공하면 1로 변하도록 함
 
-		log.info("...array Size : " + paramObject.size());
+		log.info("...FriendList array Size : " + paramObject.size());
 		
 		friendListDTO tempDTO; // => DTO 형식으로 임시 저장할 변수
 		friendListDTO rDTO; // => 데이터 중복을 위한 변수
@@ -115,17 +116,18 @@ public class KakaoFriendListReqService extends KakaoServiceLog implements IKakao
 		for(int i = 0; i < paramObject.size(); i++) {
 			tempDTO = new friendListDTO();
 			rDTO  = new friendListDTO();
-			
+
 			JsonElement element = paramObject.get(i);
-			tempDTO.setUuid(element.getAsJsonObject().get("uuid").getAsString());
+			tempDTO.setFriend_uuid(element.getAsJsonObject().get("uuid").getAsString());
 			// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ERROR >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-			rDTO = kakaoFriendList.getUuidExists(tempDTO); // => 널 발생
+			rDTO = kakaoFriendMapper.getUuidExists(tempDTO); // => 널 발생
+			log.info(".......null > " + tempDTO.getFriend_uuid());
 			//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ERROR <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 			log.info("Y? N? " + rDTO.getExists_yn().toString());
 			if(rDTO.getExists_yn().equals("N")) {// => 만약 중복이 아니면 N을 반환하기 때문에 if 스코프 안에 로직이 동작함
 				tempDTO.setKid(element.getAsJsonObject().get("id").getAsString());
 				tempDTO.setName(element.getAsJsonObject().get("profile_nickname").getAsString());
-				res = kakaoFriendList.insertFriendList(tempDTO);
+				res = kakaoFriendMapper.insertFriendList(tempDTO);
 				tempDTO = null;
 				rDTO = null;
 				element = null;

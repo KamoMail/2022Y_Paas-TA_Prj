@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- JAVA와 연결할 Mapper 파일 설정 -->
 <mapper namespace="paasta.demo.persistance.mapper.KakaoMessageMapper">
-
 <!-- Pk인 UUID로 중복 등록 여부 확인하는 쿼리-->
 	<select id="getUuidExists" parameterType="friendListDTO" resultType="friendListDTO">
 		SELECT 
@@ -10,7 +9,7 @@
 		FROM 
 			FRIEND_LIST
 		WHERE
-			FRIEND_UUID=#{uuid};
+			FRIEND_UUID=#{friend_uuid};
 	</select>	
 		
 </mapper>
