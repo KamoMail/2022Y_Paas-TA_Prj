@@ -9,7 +9,6 @@ import paasta.demo.dto.mongo.testDTO;
 @Mapper
 public interface KakaoMessageMapper {
 	
-	testDTO nullTest() throws Exception; //=> 마이바티즈 테스트
 
 	friendListDTO getUuidExists(friendListDTO pDTO) throws Exception; //=> UUID 중복을 확인 하는 메서드
 	

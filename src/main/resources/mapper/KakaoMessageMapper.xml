@@ -11,5 +11,16 @@
 		WHERE
 			FRIEND_UUID=#{friend_uuid};
 	</select>	
-		
+<!-- 친구 정보 저장을 위한 쿼리 -->
+	<insert id="insertFriendList" parameterType="friendListDTO">
+		INSERT INTO 
+			FRIEND_LIST
+			(
+				USER_EMAIL, FRIEND_NAME, FRIEND_KID, FRIEND_UUID
+			)
+		VALUES
+			(
+				#{user_email}, #{friend_name}, #{friend_kid}, #{friend_uuid}
+			);
+	</insert>	
 </mapper>

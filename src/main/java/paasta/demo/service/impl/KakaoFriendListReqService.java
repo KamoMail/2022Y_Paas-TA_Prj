@@ -104,29 +104,31 @@ public class KakaoFriendListReqService extends KakaoServiceLog implements IKakao
 	}
 	// => 친구 목록 불러온 다음 저장을 수행하는 메서드(몽고 디비와 mySQL에 저장함)
 	@Override
-	public int insertFriendList(JsonArray paramObject) throws Exception {
+	public int insertFriendList(JsonArray paramObject, String user_email) throws Exception {
 		log.info(this.getClass().getName() + "...Kakao Freind Insert To DataBase Start");
 		int res = 0; // 성공하면 1로 변하도록 함
-
 		log.info("...FriendList array Size : " + paramObject.size());
 		
 		friendListDTO tempDTO; // => DTO 형식으로 임시 저장할 변수
 		friendListDTO rDTO; // => 데이터 중복을 위한 변수
+		int countNum = 0; 
 		//------------------------------------UUID 중복확인한 후 데이터베이스에 친구 목록 저장하는 로직-------------------------------------
 		for(int i = 0; i < paramObject.size(); i++) {
 			tempDTO = new friendListDTO();
 			rDTO  = new friendListDTO();
 
 			JsonElement element = paramObject.get(i);
+			tempDTO.setUser_email(user_email);
 			tempDTO.setFriend_uuid(element.getAsJsonObject().get("uuid").getAsString());
-			// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ERROR >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-			rDTO = kakaoFriendMapper.getUuidExists(tempDTO); // => 널 발생
-			log.info(".......null > " + tempDTO.getFriend_uuid());
-			//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ERROR <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-			log.info("Y? N? " + rDTO.getExists_yn().toString());
+			rDTO = kakaoFriendMapper.getUuidExists(tempDTO); 
+			log.info("....중복 Y? N? " + rDTO.getExists_yn().toString());
+                          
 			if(rDTO.getExists_yn().equals("N")) {// => 만약 중복이 아니면 N을 반환하기 때문에 if 스코프 안에 로직이 동작함
-				tempDTO.setKid(element.getAsJsonObject().get("id").getAsString());
-				tempDTO.setName(element.getAsJsonObject().get("profile_nickname").getAsString());
+				tempDTO.setFriend_kid(element.getAsJsonObject().get("id").getAsString());
+				log.info("... [" + countNum + "]===User_id : " + tempDTO.getFriend_kid());
+				tempDTO.setFriend_name(element.getAsJsonObject().get("profile_nickname").getAsString());
+				log.info("... [" + countNum + "]===User_Name : " + tempDTO.getFriend_name());
+				countNum++;
 				res = kakaoFriendMapper.insertFriendList(tempDTO);
 				tempDTO = null;
 				rDTO = null;

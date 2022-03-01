@@ -16,7 +16,6 @@ import paasta.demo.dto.redis.redisSchema;
 import paasta.demo.persistance.mapper.redis.IRedisRepository;
 import paasta.demo.service.IKakaoFriendListReqService;
 import paasta.demo.service.IMailService;
-import paasta.demo.service.impl.KakaoFriendListReqService;
 import paasta.demo.service.impl.MailService;
 
 @SpringBootTest
@@ -56,12 +55,13 @@ class PaasTaApplicationTests {
     }
 	// 버퍼 사용하면 안되는 이유 찾기
 	@Test
-    void 왜안될까() throws Exception{
+    void 메시지보내기() throws Exception{
 		// given
-		String accessTokenTest = "E";
+		String accessTokenTest = "hRsV";
+		String user_email = "me94om";
 		// when 
 		JsonArray res = kakaoFriendListReq.requestFriendList(accessTokenTest, 5);
-		int result = kakaoFriendListReq.insertFriendList(res);
+		int result = kakaoFriendListReq.insertFriendList(res, user_email);
     	// then
 		assertEquals(result, 1);
     }
