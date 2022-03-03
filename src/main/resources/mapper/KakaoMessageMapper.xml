@@ -23,4 +23,15 @@
 				#{user_email}, #{friend_name}, #{friend_kid}, #{friend_uuid}
 			);
 	</insert>	
+<!-- 메시지 보내기 위한 친구 목록 조회 쿼리-->
+	<select id="getFriendInfo" parameterType="friendListDTO" resultType="friendListDTO">
+		SELECT 
+			USER_EMAIL,
+			FRIEND_NAME,
+			FRIEND_UUID
+		FROM 
+			FRIEND_LIST
+		WHERE
+			USER_EMAIL=#{user_email};
+	</select>	
 </mapper>

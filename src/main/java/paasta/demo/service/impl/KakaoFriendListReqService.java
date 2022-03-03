@@ -16,7 +16,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import paasta.demo.dto.mongo.friendListDTO;
-import paasta.demo.dto.mongo.testDTO;
 import paasta.demo.persistance.mapper.KakaoMessageMapper;
 import paasta.demo.service.IKakaoFriendListReqService;
 import paasta.demo.service.comm.IKakaoInfoService;

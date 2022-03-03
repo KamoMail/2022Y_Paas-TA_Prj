@@ -15,6 +15,7 @@ import paasta.demo.dto.MailDTO;
 import paasta.demo.dto.redis.redisSchema;
 import paasta.demo.persistance.mapper.redis.IRedisRepository;
 import paasta.demo.service.IKakaoFriendListReqService;
+import paasta.demo.service.IKakaoMessageService;
 import paasta.demo.service.IMailService;
 import paasta.demo.service.impl.MailService;
 
@@ -26,6 +27,9 @@ class PaasTaApplicationTests {
 	
 	@Autowired
 	private IKakaoFriendListReqService kakaoFriendListReq;
+	
+	@Autowired
+	private IKakaoMessageService KakaoMessageService;
 	
 	//@Test
 	void 메일테스트() throws Exception{
@@ -53,22 +57,26 @@ class PaasTaApplicationTests {
 		System.out.println("res : " + res);
 		assertEquals(res, "친구목록 불러오기 성공");
     }
-	// 버퍼 사용하면 안되는 이유 찾기
-	@Test
-    void 메시지보내기() throws Exception{
+	//@Test
+    void 친구목록가쟈와저장() throws Exception{
 		// given
-		String accessTokenTest = "hRsV";
-		String user_email = "me94om";
+		String accessTokenTest = "lsJbG1vf5mBRBnHPLjbHw5jsI5uht_dh-YXxHwo9dRsAAAF_SDsKXA";
+		String user_email = "me940728@naver.com";
 		// when 
 		JsonArray res = kakaoFriendListReq.requestFriendList(accessTokenTest, 5);
 		int result = kakaoFriendListReq.insertFriendList(res, user_email);
     	// then
 		assertEquals(result, 1);
     }
-	
-	//@Test
-	void 매퍼테스트() throws Exception{
-		
+	@Test
+	void 메시지전송() throws Exception{
+		// given
+		String user_email = "me940728@naver.com";
+		String accessTokenTest = "lsJbG1vf5mBRBnHPLjbHw5jsI5uht_dh-YXxHwo9dRsAAAF_SDsKXA";
+		// when
+		String res = KakaoMessageService.sendFriendKakaoTalk(accessTokenTest, user_email);
+		// then
+		assertEquals(res, "이상무");
 	}
 
 }

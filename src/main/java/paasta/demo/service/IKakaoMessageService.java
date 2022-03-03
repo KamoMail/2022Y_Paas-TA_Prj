@@ -6,7 +6,7 @@ package paasta.demo.service;
  * */
 public interface IKakaoMessageService {
 	
-	public String sendFriendKakaoTalk(); // => 친구에게 메시지 보내기
+	public String sendFriendKakaoTalk(String accessToken,String user_email) throws Exception; // => 친구에게 메시지 보내기
 	
-	public String sendMyKakaoTalk(String accessToken, String message, String moveUrl); // 카카오 메시지 나에게 보내기
+	public String sendMyKakaoTalk(String accessToken, String message, String moveUrl) throws Exception; // 카카오 메시지 나에게 보내기
 }

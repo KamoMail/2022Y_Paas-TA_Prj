@@ -6,10 +6,16 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import paasta.demo.dto.mongo.friendListDTO;
+import paasta.demo.persistance.mapper.KakaoMessageMapper;
 import paasta.demo.service.IKakaoMessageService;
 import paasta.demo.service.comm.IKakaoInfoService;
 import paasta.demo.service.comm.KakaoServiceLog;
@@ -22,8 +28,13 @@ import paasta.demo.service.comm.KakaoServiceLog;
  * | 2022.02.12 |  최별규     |  초안 작성
  * 메시지는 엑세스 토큰이 있어야만 발송이 가능합니다.
  * */
+@Service("KakaoMessageService")
 public class KakaoMessageService extends KakaoServiceLog implements IKakaoMessageService, IKakaoInfoService{
-	// => 카카오 로그인 성공 후 나에게 톡을 보내는 기능
+	
+	@Autowired
+	private KakaoMessageMapper kakaoFriendMapper;
+	
+// => 카카오 로그인 성공 후 나에게 톡을 보내는 기능
 	@Override
 	public String sendMyKakaoTalk(String accessToken, String message, String moveUrl) {
 		log.info(this.getClass().getName() + "...send My Kakao Talk Start!!!");
@@ -79,11 +90,30 @@ public class KakaoMessageService extends KakaoServiceLog implements IKakaoMessag
 		}
 		return returnMessageLog;
 	}
-
+// => 친구에게 메시지 보내는 메서드
 	@Override
-	public String sendFriendKakaoTalk() {
-		// TODO Auto-generated method stub
-		return null;
+	public String sendFriendKakaoTalk(String accessToken, String user_email) throws Exception {
+		log.info(this.getClass().getName() + "...send Message Fot My Friend Start");
+		String res;
+		
+		List<friendListDTO> rList = new ArrayList<friendListDTO>();
+		friendListDTO pDTO = new friendListDTO();
+		pDTO.setUser_email(user_email);
+		rList = kakaoFriendMapper.getFriendInfo(pDTO);
+		
+		if(rList != null) {
+			res = "이상무";
+			for(friendListDTO e : rList) {
+				log.info("---------------------------------------");
+				log.info("....USER_EMAIL : " + e.getUser_email());
+				log.info("....FRIEND_NAME : " + e.getFriend_name());
+				log.info("....FRIEND_UUID : " + e.getFriend_uuid());
+				log.info("---------------------------------------");
+			}
+		} else res = "널";
+		
+		log.info(this.getClass().getName() + "...send Message Fot My Friend End");
+		return res;
 	}
 	
 
