@@ -60,8 +60,8 @@ class PaasTaApplicationTests {
 	//@Test
     void 친구목록가쟈와저장() throws Exception{
 		// given
-		String accessTokenTest = "lsJbG1vf5mBRBnHPLjbHw5jsI5uht_dh-YXxHwo9dRsAAAF_SDsKXA";
-		String user_email = "me940728@naver.com";
+		String accessTokenTest = "lsJbG1v";
+		String user_email = "me9.com";
 		// when 
 		JsonArray res = kakaoFriendListReq.requestFriendList(accessTokenTest, 5);
 		int result = kakaoFriendListReq.insertFriendList(res, user_email);
@@ -71,8 +71,8 @@ class PaasTaApplicationTests {
 	@Test
 	void 메시지전송() throws Exception{
 		// given
-		String user_email = "me940728@naver.com";
-		String accessTokenTest = "lsJbG1vf5mBRBnHPLjbHw5jsI5uht_dh-YXxHwo9dRsAAAF_SDsKXA";
+		String user_email = "me9om";
+		String accessTokenTest = "iFze_lnnIA";
 		// when
 		String res = KakaoMessageService.sendFriendKakaoTalk(accessTokenTest, user_email);
 		// then

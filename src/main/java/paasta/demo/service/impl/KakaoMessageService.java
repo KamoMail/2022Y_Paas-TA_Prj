@@ -7,12 +7,16 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
 
 import paasta.demo.dto.mongo.friendListDTO;
 import paasta.demo.persistance.mapper.KakaoMessageMapper;
@@ -63,7 +67,7 @@ public class KakaoMessageService extends KakaoServiceLog implements IKakaoMessag
 			template_object = new JSONObject();
 			template_object.put("template_object", dataOne); // 최종 JSON으로 만들기
 			
-			log.info("template_object  : " + template_object.toString());
+			log.info("....template_object  : " + template_object.toString());
 			
 			conn.setRequestMethod("POST");
 			//--------------------------------------요청에 필요한 Header에 포함될 내용 헤더에 포함----------------------------
@@ -94,24 +98,83 @@ public class KakaoMessageService extends KakaoServiceLog implements IKakaoMessag
 	@Override
 	public String sendFriendKakaoTalk(String accessToken, String user_email) throws Exception {
 		log.info(this.getClass().getName() + "...send Message Fot My Friend Start");
-		String res;
-		
-		List<friendListDTO> rList = new ArrayList<friendListDTO>();
+		String res = "NotToMessage";
+		String testMessage = "최별규입니다. 카톡 단체메시지 테스트 보냅니다.";
+		String web_link = "nullData";
+		String mobile_web_link = "nullData";
+		//-----------------------------------메시지를 보낼 사용자 정보 가져오는 로직-------------------------------------------------------
 		friendListDTO pDTO = new friendListDTO();
 		pDTO.setUser_email(user_email);
+		
+		List<friendListDTO> rList = new ArrayList<friendListDTO>();
 		rList = kakaoFriendMapper.getFriendInfo(pDTO);
 		
-		if(rList != null) {
-			res = "이상무";
-			for(friendListDTO e : rList) {
-				log.info("---------------------------------------");
-				log.info("....USER_EMAIL : " + e.getUser_email());
-				log.info("....FRIEND_NAME : " + e.getFriend_name());
-				log.info("....FRIEND_UUID : " + e.getFriend_uuid());
-				log.info("---------------------------------------");
-			}
-		} else res = "널";
+		String data = rList
+				.stream()
+				.map(d -> d.getFriend_uuid())
+				.reduce((e, d) -> e + "," + d).toString();
 		
+		String [] RESULT_UUID = data
+				.replaceAll("\\[", "")
+				.replaceAll("\\]", "")
+				.substring(8) // => 앞에 사용하지 않는 문자열 제외
+				.split(",");
+
+		log.info("....UUID_Arrays : " + Arrays.toString(RESULT_UUID));
+		Stream<String> st = Arrays.stream(RESULT_UUID);
+		st.forEach(e -> log.info("....RESULT_UUID : " + e));
+		
+		int count = 0;
+		//----------------------------------------------------------------------------------------------------------------------
+		//-----------------------------------link 키 value는 웹과 모바일로 나누어져 있어 맵에다 담았음---------------------------------------
+		HashMap<String, String> linkMap = new HashMap<String, String>();
+		linkMap.put("web_url", web_link);
+		linkMap.put("mobile_web_url", mobile_web_link);
+		// --------------------------------------제이슨 형식의 데이터 생성을 위한 작업--------------------------------------------
+		JSONObject dataOne = new JSONObject();
+		dataOne.put("object_type", "text");
+		dataOne.put("text", testMessage);
+		dataOne.put("link", linkMap);
+		dataOne.put("button_title", "사이트이동[null]");
+		// ----------------------------------------------접속을 위한 객체선언부----------------------------------------------
+		URL url = null;
+		HttpURLConnection conn = null;
+		JSONObject template_object = null; // 가장 바깥 쪽의 JSON 최종 결과물 담을 곳임
+		try {
+			url = new URL(SEND_TALK_FRIEND_URL); // 카카오 접속 URL
+			conn = (HttpURLConnection) url.openConnection();
+			template_object = new JSONObject();
+			template_object.put("template_object", dataOne); // 최종 JSON으로 만들기
+
+			log.info("template_object  : " + template_object.toString());
+
+			conn.setRequestMethod("POST");
+			// --------------------------------------요청에 필요한 Header에 포함될 내용 헤더에포함----------------------------
+			conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+			conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36");
+			// conn.setRequestProperty("template_object", template_object.toString());
+			// ---------------------------------------------------데이터를 보내는작업부분------------------------------------
+			conn.setDoOutput(true);
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream())); // json 버퍼스트림으로 넣기
+			StringBuilder sb = new StringBuilder();
+			sb.append("&receiver_uuids=");
+			sb.append(Arrays.toString(RESULT_UUID)); // => 친구 UUID 가져와서 5명씩 문자열 배열로
+			sb.append("&template_object=");
+			sb.append(dataOne);
+			log.info("....URL : " + sb.toString());
+			bw.write(sb.toString()); // 형변환하여 쓰기
+			bw.flush(); // 결과물 버퍼에서 보내기
+			bw.close(); // 리소스 닫기
+			// --------------------------------------------------응답코드 받는곳-----------------------------------------------------
+			int responseCode = conn.getResponseCode();
+			log.info("responseCode : " + responseCode);
+			// ------------------------------------------------------------------------------------------------------------------
+		} catch (IOException e) {
+			log.info(e);
+		} finally {
+			log.info(this.getClass().getName() + "...send My Kakao Talk End");
+		}
 		log.info(this.getClass().getName() + "...send Message Fot My Friend End");
 		return res;
 	}

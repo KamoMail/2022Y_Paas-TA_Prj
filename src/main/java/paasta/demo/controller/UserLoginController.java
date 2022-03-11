@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +37,7 @@ public class UserLoginController extends CommController{
 	@GetMapping(value = "/loginPage")
 	public String loginPage() throws Exception{
 		log.info(this.getClass().getName() + ".Logim Page load Start");
+		// logger.info("test");
 		log.info(this.getClass().getName() + ".Logim Page load End");
 		return "/user/UserLoginPage";
 	}

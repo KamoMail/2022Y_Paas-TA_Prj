@@ -29,6 +29,26 @@
         </dependency>
 <!-- =============================필요한 라이브러리의 의존성을 주입 해주는 시작점 ======================================= -->
 
+<!-- 자바 로그백 사용을 위한 SLF4J 의존성 추가(Simple Logging Facade for Java) -->
+<!-- logback-core.jar 추가 -->
+<!--  <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-core</artifactId>
+        <version>1.2.3</version>
+    </dependency> -->
+<!-- logback-classic.jar 추가 -->
+<!--     <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>1.2.3</version>
+    </dependency> -->
+<!-- slf4j-api.jar 추가-->
+<!--     <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>1.7.28</version>
+    </dependency>  -->
+<!-- =========================================================== -->
 <!-- 인증 관련 의존성 해당 의존성 사용하면 초기 서비스 젒근 아이디와 패스워드 입력해야 함-->
 <!-- 		<dependency>
 			<groupId>org.springframework.boot</groupId>
