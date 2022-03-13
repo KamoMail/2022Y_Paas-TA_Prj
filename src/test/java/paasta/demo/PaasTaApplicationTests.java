@@ -71,8 +71,8 @@ class PaasTaApplicationTests {
 	@Test
 	void 메시지전송() throws Exception{
 		// given
-		String user_email = "me9om";
-		String accessTokenTest = "iFze_lnnIA";
+		String user_email = "me94072";
+		String accessTokenTest = "hY7ZmU_";
 		// when
 		String res = KakaoMessageService.sendFriendKakaoTalk(accessTokenTest, user_email);
 		// then
